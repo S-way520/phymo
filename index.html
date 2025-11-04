@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>我的个人网站</title>
+    <meta name="description" content="个人简介、技能展示与联系方式" />
+
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+
+    <style>
+        :root {
+            --primary: #1e88e5; /* 蓝色 */
+            --primary-600: #1565c0;
+            --text: #0f172a; /* 深色文本 */
+            --muted: #475569; /* 辅助文本 */
+            --bg: #ffffff; /* 背景白 */
+            --bg-soft: #e6f2ff; /* 浅蓝背景块 */
+            --surface: #f8fafc; /* 卡片浅灰 */
+            --border: #e2e8f0;
+            --shadow: 0 8px 24px rgba(2, 6, 23, 0.08);
+            --radius: 14px;
+            --radius-sm: 10px;
+            --container: 1120px;
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.6;
+        }
+
+        a { color: inherit; text-decoration: none; }
+        img { max-width: 100%; display: block; }
+
+        /* 容器 */
+        .container {
+            width: min(100%, var(--container));
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* 顶部导航 */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: saturate(150%) blur(8px);
+            background: color-mix(in srgb, var(--bg) 80%, transparent);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+        }
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            color: var(--primary);
+        }
+        .brand .material-icons { font-size: 28px; }
+        .nav-links {
+            display: flex;
+            gap: 18px;
+        }
+        .nav-links a {
+            padding: 8px 12px;
+            border-radius: 10px;
+            color: var(--muted);
+        }
+        .nav-links a:hover,
+        .nav-links a:focus {
+            color: var(--primary);
+            background: var(--bg-soft);
+            outline: none;
+        }
+
+        /* 横幅 */
+        .hero {
+            background:
+                radial-gradient(1200px 600px at 80% -50%, rgba(30,136,229,0.15), transparent 60%),
+                linear-gradient(180deg, #f0f7ff 0%, #ffffff 60%);
+            padding: 80px 0 60px;
+        }
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 32px;
+            align-items: center;
+        }
+        .headline {
+            font-size: clamp(28px, 5vw, 44px);
+            line-height: 1.15;
+            margin: 0 0 16px;
+            letter-spacing: 0.3px;
+        }
+        .subhead {
+            color: var(--muted);
+            font-size: clamp(15px, 2vw, 18px);
+            margin: 0 0 28px;
+        }
+        .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: #fff;
+            color: var(--text);
+            box-shadow: var(--shadow);
+            transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+        }
+        .btn.primary {
+            background: var(--primary);
+            color: #fff;
+            border-color: transparent;
+        }
+        .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(2, 6, 23, 0.12); }
+        .btn:active { transform: translateY(0); }
+
+        .hero-media {
+            position: relative;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            aspect-ratio: 4 / 3;
+            background: var(--surface);
+        }
+        .hero-badge {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.9);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            box-shadow: var(--shadow);
+        }
+
+        /* 分区标题 */
+        .section { padding: 64px 0; }
+        .section-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        .section h2 { margin: 0; font-size: 24px; }
+        .section p.lead { margin: 6px 0 0; color: var(--muted); }
+
+        /* 关于我 */
+        .about {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+        .card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+        }
+        .list {
+            display: grid;
+            gap: 10px;
+            color: var(--muted);
+        }
+        .list-item { display: flex; align-items: center; gap: 10px; }
+        .list-item .material-icons { color: var(--primary); }
+
+        /* 技能 */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        .skill {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            box-shadow: var(--shadow);
+        }
+        .skill-head { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+        .skill .material-icons { color: var(--primary); }
+        .progress {
+            height: 10px;
+            background: var(--surface);
+            border-radius: 999px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .progress > span {
+            display: block;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-600));
+        }
+
+        .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+        .tag {
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--muted);
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+        }
+
+        /* 联系 */
+        .contact {
+            display: grid;
+            grid-template-columns: 1.2fr .8fr;
+            gap: 24px;
+        }
+        form { display: grid; gap: 12px; }
+        .field { display: grid; gap: 6px; }
+        label { color: var(--muted); font-size: 14px; }
+        input[type="text"], input[type="email"], textarea {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 14px;
+            background: #fff;
+        }
+        textarea { min-height: 120px; resize: vertical; }
+        .socials { display: grid; gap: 10px; }
+        .social-link { display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid var(--border); border-radius: 12px; }
+        .social-link:hover { background: var(--bg-soft); }
+
+        /* 页脚 */
+        footer { border-top: 1px solid var(--border); background: #fff; }
+        .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 0; }
+        .muted { color: var(--muted); }
+
+        /* 返回顶部按钮 */
+        .to-top {
+            position: fixed;
+            right: 18px;
+            bottom: 18px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            background: var(--primary);
+            box-shadow: var(--shadow);
+            border: none;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: opacity .2s ease, transform .2s ease, visibility .2s ease;
+        }
+        .to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+
+        /* 响应式 */
+        @media (max-width: 980px) {
+            .hero-grid { grid-template-columns: 1fr; }
+            .about { grid-template-columns: 1fr; }
+            .contact { grid-template-columns: 1fr; }
+            .skills-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .nav-links { gap: 8px; }
+            .nav-links a { padding: 8px 10px; }
+            .section { padding: 48px 0; }
+            .skills-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <header class="navbar" role="banner">
+        <div class="container nav-inner">
+            <a class="brand" href="#home" aria-label="返回首页">
+                <span class="material-icons" aria-hidden="true">bolt</span>
+                <span>MySite</span>
+            </a>
+            <nav class="nav-links" role="navigation" aria-label="主导航">
+                <a href="#home">首页</a>
+                <a href="#about">关于我</a>
+                <a href="#skills">我的技能</a>
+                <a href="#contact">联系我</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 首页横幅 -->
+    <section id="home" class="hero" aria-label="首页横幅">
+        <div class="container hero-grid">
+            <div>
+                <h1 class="headline">你好，我是某某 —— 前端/全栈开发者</h1>
+                <p class="subhead">专注简洁、现代与高性能的 Web 体验。热爱将想法快速转化为可用产品，并持续打磨用户体验。</p>
+                <div class="cta-row">
+                    <a class="btn primary" href="#contact"><span class="material-icons" aria-hidden="true">send</span>联系我</a>
+                    <a class="btn" href="#skills"><span class="material-icons" aria-hidden="true">build</span>查看技能</a>
+                </div>
+            </div>
+            <div class="hero-media" aria-hidden="true">
+                <img src="https://picsum.photos/800/600?random=1" alt="示意图" />
+                <span class="hero-badge"><span class="material-icons" aria-hidden="true">verified</span> 可接远程/兼职</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于我 -->
+    <section id="about" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>关于我</h2>
+                <p class="lead">简洁高效，持续学习与分享</p>
+            </div>
+            <div class="about">
+                <div class="card">
+                    <p>拥有多年 Web 开发经验，专注于以用户为中心的设计与实现。熟悉前端工程化、设计系统与性能优化，喜欢把复杂问题拆解为可迭代的小目标。</p>
+                    <div class="tags">
+                        <span class="tag">前端工程化</span>
+                        <span class="tag">设计系统</span>
+                        <span class="tag">性能优化</span>
+                        <span class="tag">可访问性</span>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="list">
+                        <div class="list-item"><span class="material-icons" aria-hidden="true">check_circle</span><span>组件化与可复用方案</span></div>
+                        <div class="list-item"><span class="material-icons" aria-hidden="true">check_circle</span><span>移动端优先与响应式布局</span></div>
+                        <div class="list-item"><span class="material-icons" aria-hidden="true">check_circle</span><span>API 设计与简单后端集成</span></div>
+                        <div class="list-item"><span class="material-icons" aria-hidden="true">check_circle</span><span>CI/CD 与可观测性初级建设</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 我的技能 -->
+    <section id="skills" class="section" aria-label="我的技能">
+        <div class="container">
+            <div class="section-header">
+                <h2>我的技能</h2>
+                <p class="lead">核心栈与常用工具</p>
+            </div>
+            <div class="skills-grid">
+                <div class="skill">
+                    <div class="skill-head"><span class="material-icons" aria-hidden="true">code</span><strong>HTML/CSS</strong><span class="muted" style="margin-left:auto">高级</span></div>
+                    <div class="progress" aria-label="HTML/CSS 熟练度" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"><span style="width:90%"></span></div>
+                    <div class="tags"><span class="tag">Flexbox</span><span class="tag">Grid</span><span class="tag">响应式</span></div>
+                </div>
+                <div class="skill">
+                    <div class="skill-head"><span class="material-icons" aria-hidden="true">terminal</span><strong>JavaScript/TypeScript</strong><span class="muted" style="margin-left:auto">高级</span></div>
+                    <div class="progress" aria-label="JS/TS 熟练度" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100"><span style="width:85%"></span></div>
+                    <div class="tags"><span class="tag">ESNext</span><span class="tag">TypeScript</span><span class="tag">性能</span></div>
+                </div>
+                <div class="skill">
+                    <div class="skill-head"><span class="material-icons" aria-hidden="true">web</span><strong>前端框架</strong><span class="muted" style="margin-left:auto">中高级</span></div>
+                    <div class="progress" aria-label="框架 熟练度" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"><span style="width:80%"></span></div>
+                    <div class="tags"><span class="tag">React</span><span class="tag">Vue</span><span class="tag">状态管理</span></div>
+                </div>
+                <div class="skill">
+                    <div class="skill-head"><span class="material-icons" aria-hidden="true">dns</span><strong>后端/接口</strong><span class="muted" style="margin-left:auto">中级</span></div>
+                    <div class="progress" aria-label="后端 熟练度" role="progressbar" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"><span style="width:65%"></span></div>
+                    <div class="tags"><span class="tag">Node.js</span><span class="tag">REST</span><span class="tag">Auth</span></div>
+                </div>
+                <div class="skill">
+                    <div class="skill-head"><span class="material-icons" aria-hidden="true">architecture</span><strong>工程化</strong><span class="muted" style="margin-left:auto">中高级</span></div>
+                    <div class="progress" aria-label="工程化 熟练度" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"><span style="width:75%"></span></div>
+                    <div class="tags"><span class="tag">Vite</span><span class="tag">Rollup</span><span class="tag">CI/CD</span></div>
+                </div>
+                <div class="skill">
+                    <div class="skill-head"><span class="material-icons" aria-hidden="true">security</span><strong>可访问性/安全</strong><span class="muted" style="margin-left:auto">中级</span></div>
+                    <div class="progress" aria-label="可访问性 熟练度" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"><span style="width:60%"></span></div>
+                    <div class="tags"><span class="tag">A11y</span><span class="tag">语义化</span><span class="tag">基本安全</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系我 -->
+    <section id="contact" class="section" aria-label="联系我">
+        <div class="container">
+            <div class="section-header">
+                <h2>联系我</h2>
+                <p class="lead">欢迎发邮件或通过社交平台沟通</p>
+            </div>
+            <div class="contact">
+                <div class="card">
+                    <form action="#" method="post" onsubmit="event.preventDefault(); alert('感谢来信！我会尽快回复。'); this.reset();">
+                        <div class="field">
+                            <label for="name">姓名</label>
+                            <input id="name" name="name" type="text" placeholder="如何称呼您" required />
+                        </div>
+                        <div class="field">
+                            <label for="email">邮箱</label>
+                            <input id="email" name="email" type="email" placeholder="name@example.com" required />
+                        </div>
+                        <div class="field">
+                            <label for="message">留言</label>
+                            <textarea id="message" name="message" placeholder="想与我合作的想法、项目描述或任何问题"></textarea>
+                        </div>
+                        <button class="btn primary" type="submit"><span class="material-icons" aria-hidden="true">mail</span>发送</button>
+                    </form>
+                </div>
+                <aside class="card" aria-label="社交链接">
+                    <img src="https://picsum.photos/600/400?random=2" alt="工作/生活照占位" style="border-radius: 10px; margin-bottom: 12px;" />
+                    <div class="socials">
+                        <a class="social-link" href="mailto:hello@example.com"><span class="material-icons" aria-hidden="true">alternate_email</span><span>hello@example.com</span></a>
+                        <a class="social-link" href="#" target="_blank" rel="noopener"><span class="material-icons" aria-hidden="true">share</span><span>LinkedIn</span></a>
+                        <a class="social-link" href="#" target="_blank" rel="noopener"><span class="material-icons" aria-hidden="true">public</span><span>GitHub/个人博客</span></a>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer role="contentinfo">
+        <div class="container footer-inner">
+            <div class="muted">© <span id="year"></span> 我的个人网站. 保留所有权利。</div>
+            <a class="btn" href="#home" aria-label="返回顶部"><span class="material-icons" aria-hidden="true">arrow_upward</span>Top</a>
+        </div>
+    </footer>
+
+    <!-- 悬浮返回顶部按钮 -->
+    <button class="to-top" id="toTopBtn" aria-label="返回顶部">
+        <span class="material-icons" aria-hidden="true">arrow_upward</span>
+    </button>
+
+    <script>
+        // 年份
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        // 返回顶部按钮逻辑
+        const toTopBtn = document.getElementById('toTopBtn');
+        const toggleToTop = () => {
+            if (window.scrollY > 300) {
+                toTopBtn.classList.add('show');
+            } else {
+                toTopBtn.classList.remove('show');
+            }
+        };
+        window.addEventListener('scroll', toggleToTop, { passive: true });
+        toTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+        // 辅助：点击导航在移动端收起（当前简单静态，无折叠菜单，仅保留平滑滚动）
+        document.querySelectorAll('.nav-links a').forEach(a => {
+            a.addEventListener('click', () => {
+                // 可在此扩展移动端菜单切换
+            });
+        });
+    </script>
+</body>
+</html>
+
+
+
